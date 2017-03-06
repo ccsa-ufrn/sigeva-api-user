@@ -1,0 +1,31 @@
+{
+  "name": "sigeva-api-user",
+  "version": "1.0.0",
+  "description": "Microserviço para gerenciamento de usuários do SIGEVA",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/main.js",
+    "build": "babel src -d dist",
+    "serve": "node dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ccsa-ufrn/sigeva-api-user.git"
+  },
+  "keywords": [
+    "sigeva",
+    "usuarios",
+    "api"
+  ],
+  "author": "Assessoria Técnica CCSA",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/ccsa-ufrn/sigeva-api-user/issues"
+  },
+  "homepage": "https://github.com/ccsa-ufrn/sigeva-api-user#readme",
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-core": "^6.23.1",
+    "babel-preset-es2015": "^6.22.0"
+  }
+}
