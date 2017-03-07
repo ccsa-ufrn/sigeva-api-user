@@ -3,8 +3,11 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import config from './config';
+import UserRouter from './routers/user';
 
 const app = express();
+
+mongoose.Promise = Promise;
 
 mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
   () => {
@@ -18,9 +21,11 @@ mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
   },
 );
 
-app.use(bodyParser.urlencoded(config.bodyParser));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded(config.bodyParser));
 app.use(compression());
+
+app.use('/', UserRouter);
 
 app.listen(config.server.port, () => {
   console.log(`Running at ${config.server.port}`);
