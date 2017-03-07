@@ -1,3 +1,8 @@
+import productionEnv from './config/config.production';
+import developmentEnv from './config/config.development';
+
 const { NODE_ENV } = process.env;
-const config = `../config/config.${NODE_ENV||'development'}.js`;
-module.exports = require(config);
+
+const enviroment = (NODE_ENV === 'production') ? productionEnv : developmentEnv;
+
+export default enviroment;

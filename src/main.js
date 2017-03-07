@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import config from './config.js';
+import config from './config';
 
 const app = express();
 
@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded(config.bodyParser));
 app.use(bodyParser.json());
 app.use(compression());
 
-app.listen(config.server.port, ()=>{
+app.listen(config.server.port, () => {
   console.log(`Running at ${config.server.port}`);
 });
 
