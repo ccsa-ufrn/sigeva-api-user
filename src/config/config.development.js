@@ -1,4 +1,5 @@
 export default {
+  timezone: 'America/Fortaleza',
   env: 'development',
   isTest: false,
   server: {
