@@ -5,8 +5,8 @@ mongoose.Promise = Promise;
 const userSchema = new Schema({
   login: String,
   password: String,
-  isActive: Boolean,
-  createdAt: Date,
+  isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now },
   modifiedAt: Date,
 });
 
