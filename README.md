@@ -3,9 +3,6 @@
 <div align="center">
     <img src="https://img.shields.io/badge/MongoDB-latest-green.svg">
     <img src="https://img.shields.io/badge/Mongoose-latest-blue.svg">
-    <img src="https://img.shields.io/badge/Typescript-latest-blue.svg">
-    <img src="https://img.shields.io/badge/ClassValidator-latest-green.svg">
-    <img src="https://img.shields.io/badge/ClassTransform-latest-green.svg">
 </div>
 
 ## Usando
@@ -35,6 +32,10 @@ npm start
     modifiedAt: date
 }
 ```
+
+## Restrições Importantes
+- **Nunca** retorna o **password** de um usuário.
+- Respostas da API devem seguir a [tabela de códigos HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) e *uma estrutura* descrevendo o erro.
 
 ## Documentação
 
@@ -105,8 +106,17 @@ Atualiza um usuário
 
     { "password" : "nova+senha" }
 ```
+
+Retorna o antigo objeto usuário.
+
 ```json
-    { }
+    {
+        "_id": "5a0gfieo102",
+        "login": "example",
+        "isActive": true,
+        "createdAt": "Thu Jan 19 2017 12:13:18 GMT-0300 (BRT)",
+        "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
+    }
 ```
 
 ### DELETE /:id
@@ -123,8 +133,17 @@ Sem campos
     { "_id": "id+do+usuario" }
 
 ```
+
+Retorna o objeto removido.
+
 ```json
-    { } # atualizar, retorna objeto "removido"
+    {
+        "_id": "5a0gfieo102",
+        "login": "example",
+        "isActive": true,
+        "createdAt": "Thu Jan 19 2017 12:13:18 GMT-0300 (BRT)",
+        "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
+    }
 ```
 
 
@@ -161,12 +180,21 @@ Cadastra um novo usuário
 
 #### Request/Response Examples
 ```
-    POST / HTTP/1.1
-    login=algum+login+do+usuario&password=senha+em+texto+plano
+    POST /authenticate HTTP/1.1
+    Content-Type: 'application/json'
+
+    { "login": "login+do+usuario", "password": "senha+em+texto+plano" }
 ```
+
+Retorna o objeto criado.
+
 ```json
     {
-        "id": "8a12fadv1876" # atualizar, retorna usuario anterior
+        "_id": "5a0gfieo102",
+        "login": "example",
+        "isActive": true,
+        "createdAt": "Thu Jan 19 2017 12:13:18 GMT-0300 (BRT)",
+        "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
     }
 ```
 
