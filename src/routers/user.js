@@ -70,6 +70,8 @@ UserRouter.post('/', (req, res) => {
       data: {
         login: doc.login,
         _id: doc.id,
+        isActive: doc.isActive,
+        createdAt: doc.createdAt,
       },
     });
   })
