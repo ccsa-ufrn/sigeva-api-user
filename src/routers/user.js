@@ -54,6 +54,7 @@ UserRouter.post('/', (req, res) => {
       success: false,
       message: `Error: ${e.message}`,
     });
+    return;
   }
 
   UserModel.findOne({ login: req.body.login })
