@@ -6,9 +6,11 @@ import config from './config';
 import UserRouter from './routers/user';
 
 const app = express();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded(config.bodyParser));
+app.use(compression());
 
 mongoose.Promise = Promise;
-
 mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
   () => {
     if (config.env === 'development') {
@@ -21,9 +23,6 @@ mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
   },
 );
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded(config.bodyParser));
-app.use(compression());
 
 app.use('/', UserRouter);
 
