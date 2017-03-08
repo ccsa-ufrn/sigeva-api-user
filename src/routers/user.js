@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
 import UserModel from '../models/user';
 
 const UserRouter = new Router();
@@ -44,6 +45,8 @@ UserRouter.post('/authenticate', () => {
 UserRouter.post('/', (req, res) => {
   const fields = ['login', 'password'];
   const newUser = new UserModel();
+
+  /* Valida as entradas */
   try {
     fields.forEach((field) => {
       if (!req.body[field]) throw new Error('Empty Fields');
@@ -57,6 +60,7 @@ UserRouter.post('/', (req, res) => {
     return;
   }
 
+  /* Cadastra o usuário se não já existir um com o mesmo login */
   UserModel.findOne({ login: req.body.login })
   .exec()
   .then(existent =>
@@ -64,7 +68,20 @@ UserRouter.post('/', (req, res) => {
       if (existent) reject(new Error('User Already Exists'));
       resolve();
     }))
-  .then(() => newUser.save())
+  .then(() =>
+    new Promise((resolve, reject) => {
+      /* Encripta a senha do usuário
+       * Bcrypt: https://www.npmjs.com/package/bcrypt
+       */
+      bcrypt.genSalt(10 /* SaltRounds */, (errGenSalt, salt) => {
+        if (errGenSalt) reject(errGenSalt);
+        bcrypt.hash(newUser.password, salt, (errHash, hash) => {
+          if (errHash) reject(errHash);
+          newUser.password = hash;
+          resolve(newUser.save());
+        });
+      });
+    }))
   .then((doc) => {
     res.json({
       success: true,
