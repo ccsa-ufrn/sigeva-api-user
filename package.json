@@ -7,7 +7,7 @@
         "start": "NODE_ENV=development nodemon --exec babel-node src/main.js",
         "build": "babel src -d dist",
         "serve": "npm run build && NODE_ENV=production node dist/main.js",
-        "test": "mocha --recursive --timeout 4000"
+        "test": "NODE_ENV=test mocha --recursive --timeout 4000"
     },
     "repository": {
         "type": "git",
