@@ -6,7 +6,7 @@
 </div>
 
 ## Usando
-Escolha uma pasta para fazer um clone do projeto, e instale as bibliotecas 
+Escolha uma pasta para fazer um clone do projeto, e instale as bibliotecas
 necessárias.:
 
 ```bash
@@ -16,13 +16,19 @@ cd sigeva-api-user
 npm install
 ```
 
-Agora, basta iniciar o projeto:
-
+Agora basta iniciar o projeto:
 ```
-npm start 
+npm start
 ```
 
-## Entidade: User 
+#### Modo de operação
+| Modo | Ambiente | Descrição | Comando |
+| :------------- |
+| **start**| `NODE_ENV=development` | O servidor é reiniciado automaticamente a cada alteração no código| `npm start` |
+| **build**| - | Compila o código de `/src` em ES6 e o armazena no diretório `/dist` | `npm run build`|
+| **serve** | `NODE_ENV=production` | executa o **build** e roda o código de `/dist` com `node`|`npm run serve`|
+
+## Entidade: User
 ```javascript
 {
     login: string,
@@ -33,7 +39,7 @@ npm start
 }
 ```
 
-## Restrições Importantes
+#### Restrições Importantes
 - **Nunca** retorna o **password** de um usuário.
 - Respostas da API devem seguir a [tabela de códigos HTTP](https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html) e *uma estrutura* descrevendo o erro.
 
@@ -45,7 +51,7 @@ Seção para a documentação da API de usuários.
 Retorna usuários
 
 #### Fields
-| Nome | Decrição | Valores | 
+| Nome | Decrição | Valores |
 |-------|----------|---------|
 | **p:** number | Indica a **página** de retorno de resultados | Qualquer valor acima de zero. <br> **default:** 1 |
 | **c:** number | Indica a **quantidade** de registros retornados por página (p) | Qualquer valor acima de 0. <br> **default:** 10 |
@@ -70,14 +76,14 @@ Retorna usuários
             "createdAt": "Thu Jan 19 2017 14:12:00 GMT-0300 (BRT)",
         }
     ]
-    
+
 ```
 
 ### GET /:id
 Retorna um único usuário
 
 #### Fields
-| Nome | Decrição | Valores | 
+| Nome | Decrição | Valores |
 |-------|----------|---------|
 | **f:** string | Indica quais **campos** serão retornados da requisição | Objeto JSON em formato string de acordo com a documentação do Mongoose |
 
@@ -94,8 +100,8 @@ Retorna um único usuário
 ### PUT /:id
 Atualiza um usuário
 
-### Fields 
-| Nome | Decrição | Valores | 
+### Fields
+| Nome | Decrição | Valores |
 |------|----------|---------|
 | **password:** string | | |
 
@@ -122,7 +128,7 @@ Retorna o antigo objeto usuário.
 ### DELETE /:id
 Remove um usuário
 
-### Fields 
+### Fields
 Sem campos
 
 #### Request/Response Examples
@@ -150,8 +156,8 @@ Retorna o objeto removido.
 ### POST /authenticate
 Retorna um token JWT caso as credenciais estejam corretas, caso contrário, nega.
 
-### Fields 
-| Nome | Decrição | Valores | 
+### Fields
+| Nome | Decrição | Valores |
 |------|----------|---------|
 | **login:** string | | |
 | **password:** string | | |
@@ -172,8 +178,8 @@ Retorna um token JWT caso as credenciais estejam corretas, caso contrário, nega
 ### POST /
 Cadastra um novo usuário
 
-### Fields 
-| Nome | Decrição | Valores | 
+### Fields
+| Nome | Decrição | Valores |
 |-------|----------|---------|
 | **login:** string | - | - |
 | **password:** string | - | - |
