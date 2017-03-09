@@ -27,6 +27,7 @@ npm start
 | **start**| `NODE_ENV=development` | O servidor é reiniciado automaticamente a cada alteração no código| `npm start` |
 | **build**| - | Compila o código de `/src` em ES6 e o armazena no diretório `/dist` | `npm run build`|
 | **serve** | `NODE_ENV=production` | executa o **build** e roda o código de `/dist` com `node`|`npm run serve`|
+| **test** | `NODE_ENV=test` | executa os testes |`npm test`|
 
 ## Entidade: User
 ```javascript
