@@ -12,13 +12,14 @@ app.use(compression());
 
 mongoose.Promise = Promise;
 mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
-  () => {
-    console.log(`Connection established ${config.mongodb.uri}`);
-  },
-  (err) => {
-    console.error(err.message);
-    process.exit(1); // Finaliza com erro
-  },
+    () => {
+        if(config.env !== 'test')
+            console.log(`Connection established ${config.mongodb.uri}`);
+    },
+    (err) => {
+        console.error(err.message);
+        process.exit(1); // Finaliza com erro
+    },
 );
 
 app.use('/', UserRouter);
