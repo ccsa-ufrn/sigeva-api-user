@@ -195,7 +195,9 @@ Cadastra um novo usuário
 
 Retorna o objeto criado.
 
-```json
+```
+    HTTP/1.1 200 OK
+
     {
         "_id": "5a0gfieo102",
         "login": "example",
@@ -204,6 +206,28 @@ Retorna o objeto criado.
         "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
     }
 ```
+
+**Erro para requisições inválidas:**
+
+```
+    POST /authenticate HTTP/1.1
+    Content-Type: 'application/json'
+
+    { }
+```
+
+```
+    HTTP/1.1 400
+
+    {
+        "error": "campos obrigatórios vazios",
+        "target": [
+            { "field": "login", "error": "não deve ser nulo" },
+            { "field": "password", "error": "não deve ser nulo" }
+        ]
+    }
+```
+
 
 ## Referências
 
