@@ -101,6 +101,23 @@ describe('POST /', () => {
 
     });
 
+    it('should create a new user', (done) => {
+
+        chai.request(server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send({ login: 'newuser', password: '123456' })
+        .end((err, res) => {
+            expect(res).to.have.status(200);
+            expect(res.body['_id']).to.not.be.an('undefined');
+            expect(res.body['isActive']).to.not.be.an('undefined');
+            expect(res.body['login']).to.not.be.an('undefined');
+            expect(res.body['password']).to.be.an('undefined');
+            done();
+        });
+
+    });
+
     after(() => {
         server.close();
     })
