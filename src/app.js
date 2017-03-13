@@ -11,14 +11,15 @@ app.use(bodyParser.urlencoded(config.bodyParser));
 app.use(compression());
 
 mongoose.Promise = Promise;
-mongoose.connect(config.mongodb.uri, { reconnecTries: 2 }).then(
+mongoose.connect(config.mongodb.uri, { reconnectTries: 2 }).then(
     () => {
-        if(config.env !== 'test')
-            console.log(`Connection established ${config.mongodb.uri}`);
+      if (config.env !== 'test') {
+        console.log(`Connection established ${config.mongodb.uri}`);
+      }
     },
     (err) => {
-        console.error(err.message);
-        process.exit(1); // Finaliza com erro
+      console.error(err.message);
+      process.exit(1); // Finaliza com erro
     },
 );
 
