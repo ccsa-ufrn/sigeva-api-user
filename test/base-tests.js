@@ -10,7 +10,7 @@ var chai = require('chai'),
 
 chai.use(chaiHttp);
 
-describe('POST /', () => {
+describe('POST / :', () => {
 
     let server;
 
@@ -101,6 +101,20 @@ describe('POST /', () => {
 
     });
 
+    it('when credentials are wrong should return an error', (done) => {
+
+        chai.request(server)
+        .post('/')
+        .set('Content-Type', 'application/json')
+        .send({ login: 'newuser1', password: '1234562' })
+        .end((err, res) => {
+            expect(res).to.have.status(401);
+            expect(res.body.error).to.not.be.an('undefined'); // wrong login or password
+            done();
+        });
+
+    });
+
     it('should create a new user', (done) => {
 
         chai.request(server)
@@ -123,3 +137,58 @@ describe('POST /', () => {
     })
 
 })
+
+describe('DELETE / :', () => {
+
+    let server;
+    let theuser;
+
+    before((done) => {
+        server = app.listen(3330, () => { });
+
+        // emptying collection
+        userModel.remove({ },() => {
+            // adding a new user to test database
+            bcrypt.genSalt(10, (errGenSalt, salt) => {
+                bcrypt.hash('123456', salt, (errHash, hash) => {
+                    let user = new userModel({
+                        login: 'my-login',
+                        password: hash
+                    });
+                    user.save((err, user) => {
+                        theuser = user._id;
+                    });
+                    done();
+                });
+            });
+        });
+    })
+
+    it('should be working', (done) => {
+
+        chai.request(server)
+        .post('/')
+        .end((err, res) => {
+            expect(res).to.have.status(400);
+            done();
+        });
+
+    });
+
+    // it('when no "login" and "password" are passed, '+
+    //     'should return an error', (done) => {
+
+    //     chai.request(server)
+    //     .delete('/')
+    //     .end((err, res) => {
+    //         done();
+    //     });
+
+    // });
+
+    after(() => {
+        server.close();
+    })
+
+})
+

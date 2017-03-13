@@ -127,7 +127,8 @@ Retorna o antigo objeto usuário.
 ```
 
 ### DELETE /:id
-Remove um usuário
+Remove um usuário. Na verdade, a única coisa que ocorre é a modificação do
+campo **isActive**.
 
 ### Fields
 Sem campos
@@ -177,7 +178,12 @@ Retorna um token JWT caso as credenciais estejam corretas, caso contrário, nega
 ```
 
 ### POST /
-Cadastra um novo usuário
+Cadastra um novo usuário.
+
+A ideia é que as restrições de negócio não aconteçam em código na API,
+e sim, sejam alteradas/criadas pelos operadores do sistema, ou seja,
+serão armazenadas um microserviço da API específico para lidar com as 
+regras de negócio.
 
 ### Fields
 | Nome | Decrição | Valores |
