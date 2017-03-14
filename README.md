@@ -148,11 +148,32 @@ Retorna o objeto removido.
     {
         "_id": "5a0gfieo102",
         "login": "example",
-        "isActive": true,
+        "isActive": false,
         "createdAt": "Thu Jan 19 2017 12:13:18 GMT-0300 (BRT)",
         "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
     }
 ```
+
+**Erro para requisições inválidas:**
+
+```
+    DELETE / HTTP/1.1
+    Content-Type: 'application/json'
+
+    { }
+```
+
+```
+    HTTP/1.1 400
+
+    {
+        "error": "campos obrigatórios vazios",
+        "target": [
+            { "field": "_id", "error": "não pode ser nulo" }
+        ]
+    }
+```
+
 
 
 ### POST /authenticate

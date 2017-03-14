@@ -3,6 +3,7 @@ import config from '../src/config';
 import app from '../src/app';
 import userModel from '../src/models/user';
 import bcrypt from 'bcrypt';
+import moment from 'moment';
 
 var chai = require('chai'),
     expect = chai.expect,
@@ -156,7 +157,7 @@ describe('DELETE / :', () => {
                         password: hash
                     });
                     user.save((err, user) => {
-                        theuser = user._id;
+                        theuser = user;
                     });
                     done();
                 });
@@ -175,16 +176,62 @@ describe('DELETE / :', () => {
 
     });
 
-    // it('when no "login" and "password" are passed, '+
-    //     'should return an error', (done) => {
+    it('empty _id field should return an error', (done) => {
 
-    //     chai.request(server)
-    //     .delete('/')
-    //     .end((err, res) => {
-    //         done();
-    //     });
+        chai.request(server)
+        .delete('/')
+        .set('Content-Type', 'application/json')
+        .send({ })
+        .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body.error).to.not.be.an('undefined'); // required fields are empty
+            expect(res.body.target).to.not.be.an('undefined');
+            expect(res.body.target.length).to.be.equals(1);
+            expect(res.body.target[0].field).to.be.equals('_id');
+            done();
+        });
 
-    // });
+    });
+
+    it('when you try to remove a non-existent user'+
+    ' it should return an error', (done) => {
+
+        chai.request(server)
+        .delete('/')
+        .set('Content-Type', 'application/json')
+        .send({ _id: '0'})
+        .end((err, res) => {
+            expect(res).to.have.status(400);
+            expect(res.body.error).to.not.be.an('undefined');
+            expect(res.body.error).to.be.equals('The user doesn\'t exists');
+            done();
+        });
+
+    });
+
+    it('should remove (deactivate) an user successfully', (done) => {
+
+        chai.request(server)
+        .delete('/')
+        .set('Content-Type', 'application/json')
+        .send({ _id: theuser._id })
+        .end((err, res) => {
+
+            expect(res).to.have.status(200);
+            expect(res.body._id).to.be.equals(theuser._id);
+            expect(res.body.login).to.be.equals(theuser.login);
+            expect(res.body.isActive).to.be.equals(theuser.isActive);
+
+            userModel.findById(theuser._id)
+            .exec((err, res) => {
+                expect(res.isActive).to.be.equals(false);
+                expect(moment(res.modifiedAt).diff(theuser.modifiedAt)).to.not.be.equals(0);
+                done();
+            })
+
+        });
+
+    });
 
     after(() => {
         server.close();
