@@ -127,7 +127,8 @@ Retorna o antigo objeto usuário.
 ```
 
 ### DELETE /:id
-Remove um usuário
+Remove um usuário. Na verdade, a única coisa que ocorre é a modificação do
+campo **isActive**.
 
 ### Fields
 Sem campos
@@ -147,11 +148,32 @@ Retorna o objeto removido.
     {
         "_id": "5a0gfieo102",
         "login": "example",
-        "isActive": true,
+        "isActive": false,
         "createdAt": "Thu Jan 19 2017 12:13:18 GMT-0300 (BRT)",
         "modifiedAt": "Thu Jan 19 2017 12:16:24 GMT-0300 (BRT)"
     }
 ```
+
+**Erro para requisições inválidas:**
+
+```
+    DELETE / HTTP/1.1
+    Content-Type: 'application/json'
+
+    { }
+```
+
+```
+    HTTP/1.1 400
+
+    {
+        "error": "campos obrigatórios vazios",
+        "target": [
+            { "field": "_id", "error": "não pode ser nulo" }
+        ]
+    }
+```
+
 
 
 ### POST /authenticate
@@ -177,7 +199,12 @@ Retorna um token JWT caso as credenciais estejam corretas, caso contrário, nega
 ```
 
 ### POST /
-Cadastra um novo usuário
+Cadastra um novo usuário.
+
+A ideia é que as restrições de negócio não aconteçam em código na API,
+e sim, sejam alteradas/criadas pelos operadores do sistema, ou seja,
+serão armazenadas um microserviço da API específico para lidar com as 
+regras de negócio.
 
 ### Fields
 | Nome | Decrição | Valores |
