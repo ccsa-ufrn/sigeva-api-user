@@ -4,6 +4,7 @@ import app from '../src/app';
 import userModel from '../src/models/user';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
+import async from 'async';
 
 var chai = require('chai'),
     expect = chai.expect,
@@ -239,3 +240,78 @@ describe('DELETE / :', () => {
 
 })
 
+
+describe('GET / :', () => {
+
+    let server;
+
+    before((done) => {
+        server = app.listen(3330, () => { });
+
+        // emptying collection
+        userModel.remove({ },() => {
+
+            async.parallel([
+                (callback) => {
+                    // adding a new user to test database
+                    bcrypt.genSalt(10, (errGenSalt, salt) => {
+                        bcrypt.hash('157957', salt, (errHash, hash) => {
+                            let user = new userModel({
+                                login: 'user1',
+                                password: hash
+                            });
+                            user.save();
+                            callback(null, null);
+                        });
+                    });
+                },
+                (callback) => {
+                    // adding a new user to test database
+                    bcrypt.genSalt(10, (errGenSalt, salt) => {
+                        bcrypt.hash('12345', salt, (errHash, hash) => {
+                            let user = new userModel({
+                                login: 'user2',
+                                password: hash
+                            });
+                            user.save();
+                            callback(null, null);
+                        });
+                    });
+                },
+                (callback) => {
+                    // adding a new user to test database
+                    bcrypt.genSalt(10, (errGenSalt, salt) => {
+                        bcrypt.hash('123', salt, (errHash, hash) => {
+                            let user = new userModel({
+                                login: 'user3',
+                                password: hash
+                            });
+                            user.save();
+                            callback(null, null);
+                        });
+                    });
+                }
+            ], (err, res) => {
+                done();
+            })
+        });
+
+    })
+
+
+    it('should works', () => {
+
+        chai.request(server)
+        .get('/')
+        .end((err, res) => {
+            expect(res).to.have.status(200);
+            done();
+        });
+
+    })
+
+    after(() => {
+        server.close();
+    })
+
+});
