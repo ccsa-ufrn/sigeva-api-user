@@ -11,23 +11,23 @@ UserRouter.get('/', (req, res) => {
   const page = (req.query.p) ? req.query.p : 1;
   const count = (req.query.c) ? req.query.c : 10;
   const query = (req.query.q) ? req.query.q : {};
-  let fields = (req.query.f) ? req.query.f : '{}';
+  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
   const sort = (req.query.o) ? req.query.o : {};
 
-  console.log(fields);
-  let fieldsString = '';
-  let fieldsJS = JSON.parse(fields);
-  console.log(fieldsJS);
-
-  console.log(fieldsJS['login']);
-  ['login'].forEach((f) => {
-    if (fieldsJS[f]) {
-      fieldsString.concat(fieldsJS[f].concat(' '));
+  /* Converte entrada (field1,field2)->(field1 field2) */
+  let fieldsStr = '';
+  const fieldsArray = fields.split(',');
+  fieldsArray.forEach((f) => {
+    if (f !== 'password') {
+      fieldsStr = fieldsStr.concat(f);
+      fieldsStr = fieldsStr.concat(' ');
     }
   });
 
-  console.log(fieldsString);
-  UserModel.find({}, fieldsString).then((docs) => {
+  /*  */
+
+
+  UserModel.find({}, fieldsStr).then((docs) => {
     res.json(docs);
   });
 });
