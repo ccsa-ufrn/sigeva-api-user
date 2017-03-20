@@ -57,12 +57,12 @@ Retorna usuários
 | **p:** number | Indica a **página** de retorno de resultados | Qualquer valor acima de zero. <br> **default:** 1 |
 | **c:** number | Indica a **quantidade** de registros retornados por página (p) | Qualquer valor acima de 0. <br> **default:** 10 |
 | **q:** string | Filtra os resultado com condições | Objeto JSON em formato string de acordo com a documentação do Mongoose ( Queries Object ) <br> **default:** sem filtro |
-| **f:** string | Indica quais **campos** serão retornados da requisição | Objeto JSON em formato string de acordo com a documentação do Mongoose |
+| **f:** string | Indica quais **campos** serão retornados da requisição | Nomes dos campos separados por virgula |
 | **o:** string | Ordenar a query | Objeto JSON em formato string de acordo com a documentação do Mongoose |
 
 #### Request/Response Examples
 ```
-    GET ?p=1&c=2&f={"login":true,"createdAt":true} HTTP/1.1
+    GET ?p=1&c=2&f=login,createdAt HTTP/1.1
 ```
 ```json
     [
