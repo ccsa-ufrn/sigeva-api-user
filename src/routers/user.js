@@ -10,7 +10,7 @@ const UserRouter = new Router();
 UserRouter.get('/', (req, res) => {
   const page = (req.query.p) ? req.query.p : 1;
   const count = (req.query.c) ? req.query.c : 10;
-  const query = (req.query.q) ? req.query.q : {};
+  const query = (req.query.q) ? req.query.q : '{}';
   const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
   const sort = (req.query.o) ? req.query.o : {};
 
@@ -24,10 +24,17 @@ UserRouter.get('/', (req, res) => {
     }
   });
 
-  /*  */
+  let queryObj;
+  try {
+    queryObj = JSON.parse(query);
+  } catch (e) {
+    res.status(400).json({
+      error: e.message,
+    });
+    return;
+  }
 
-
-  UserModel.find({}, fieldsStr).then((docs) => {
+  UserModel.find(queryObj, fieldsStr).then((docs) => {
     res.json(docs);
   });
 });
