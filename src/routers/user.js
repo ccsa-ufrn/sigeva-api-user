@@ -7,14 +7,7 @@ const UserRouter = new Router();
 /*
  * Retorna usuários
 */
-UserRouter.get('/', (req, res) => {
-  const page = (req.query.p) ? parseInt(req.query.p, 10) : 1;
-  const count = (req.query.c) ? parseInt(req.query.c, 10) : 10;
-  const query = (req.query.q) ? req.query.q : '{}';
-  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
-  const sort = (req.query.o) ? req.query.o : '{}';
-
-  /* Converte entrada (field1,field2)->(field1 field2) */
+const userFieldsParse = (fields) => {
   let fieldsStr = '';
   const fieldsArray = fields.split(',');
   fieldsArray.forEach((f) => {
@@ -23,6 +16,18 @@ UserRouter.get('/', (req, res) => {
       fieldsStr = fieldsStr.concat(' ');
     }
   });
+  return fieldsStr;
+};
+
+UserRouter.get('/', (req, res) => {
+  const page = (req.query.p) ? parseInt(req.query.p, 10) : 1;
+  const count = (req.query.c) ? parseInt(req.query.c, 10) : 10;
+  const query = (req.query.q) ? req.query.q : '{}';
+  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
+  const sort = (req.query.o) ? req.query.o : '{}';
+
+  /* Converte entrada (field1,field2)->(field1 field2) */
+  const fieldsStr = userFieldsParse(fields);
 
   let queryObj;
   try {
@@ -61,8 +66,14 @@ UserRouter.get('/', (req, res) => {
 /*
  * Retorna um usuário com o ID
 */
-UserRouter.get('/:id', () => {
-
+UserRouter.get('/:id', (req, res) => {
+  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
+  const fieldsStr = userFieldsParse(fields);
+  UserModel
+    .find({ _id: req.params.id }, fieldsStr)
+    .then((docs) => {
+      res.json(docs);
+    });
 });
 
 /*
