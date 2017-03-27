@@ -126,7 +126,7 @@ Retorna o antigo objeto usuário.
     }
 ```
 
-### DELETE /:id
+### DELETE /
 Remove um usuário. Na verdade, a única coisa que ocorre é a modificação do
 campo **isActive**.
 
