@@ -4,9 +4,6 @@ import UserModel from '../models/user';
 
 const UserRouter = new Router();
 
-/*
- * Retorna usuários
-*/
 const userFieldsParse = (fields) => {
   let fieldsStr = '';
   const fieldsArray = fields.split(',');
@@ -19,6 +16,19 @@ const userFieldsParse = (fields) => {
   return fieldsStr;
 };
 
+const userDefaultReturn = (user) => {
+  const userTemp = user;
+  return {
+    login: userTemp.login,
+    _id: userTemp.id,
+    isActive: userTemp.isActive,
+    createdAt: userTemp.createdAt,
+  };
+};
+
+/*
+ * Retorna usuários
+*/
 UserRouter.get('/', (req, res) => {
   const page = (req.query.p) ? parseInt(req.query.p, 10) : 1;
   const count = (req.query.c) ? parseInt(req.query.c, 10) : 10;
@@ -71,8 +81,8 @@ UserRouter.get('/:id', (req, res) => {
   const fieldsStr = userFieldsParse(fields);
   UserModel
     .findById(req.params.id, fieldsStr)
-    .then((docs) => {
-      res.json(docs);
+    .then((usr) => {
+      res.json(usr);
     });
 });
 
@@ -86,8 +96,24 @@ UserRouter.put('/:id', () => {
 /*
  * Remove um usuário
 */
-UserRouter.delete('/:id', () => {
-
+UserRouter.delete('/:id', (req, res) => {
+  UserModel
+  .findById(req.params.id)
+  .then(usr =>
+    new Promise((resolve, reject) => {
+      if (!usr) reject();
+      const usrTemp = usr;
+      usrTemp.isActive = false;
+      resolve(usrTemp.save());
+    }))
+  .then((updatedUsr) => {
+    res.json(userDefaultReturn(updatedUsr));
+  })
+  .catch((e) => {
+    res.status(400).json({
+      error: `Error: ${e.message}`,
+    });
+  });
 });
 
 /*
@@ -156,12 +182,7 @@ UserRouter.post('/', (req, res) => {
             });
           }))
       .then((doc) => {
-        res.status(200).json({
-          login: doc.login,
-          _id: doc.id,
-          isActive: doc.isActive,
-          createdAt: doc.createdAt,
-        });
+        res.status(200).json(userDefaultReturn(doc));
       })
       .catch((e) => {
         res.status(400).json({
