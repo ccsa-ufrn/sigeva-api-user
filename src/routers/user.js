@@ -70,7 +70,7 @@ UserRouter.get('/:id', (req, res) => {
   const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
   const fieldsStr = userFieldsParse(fields);
   UserModel
-    .find({ _id: req.params.id }, fieldsStr)
+    .findById(req.params.id, fieldsStr)
     .then((docs) => {
       res.json(docs);
     });
