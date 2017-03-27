@@ -90,7 +90,7 @@ Retorna um único usuário
 
 #### Request/Response Examples
 ```
-    GET 5a0gfieo102?f={"login":true,"createdAt":true} HTTP/1.1
+    GET 5a0gfieo102?f=login,created HTTP/1.1
 ```
 ```json
     {
@@ -203,7 +203,7 @@ Cadastra um novo usuário.
 
 A ideia é que as restrições de negócio não aconteçam em código na API,
 e sim, sejam alteradas/criadas pelos operadores do sistema, ou seja,
-serão armazenadas um microserviço da API específico para lidar com as 
+serão armazenadas um microserviço da API específico para lidar com as
 regras de negócio.
 
 ### Fields
