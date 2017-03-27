@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import UserModel from '../models/user';
 
 const UserRouter = new Router();
@@ -23,6 +24,7 @@ const userDefaultReturn = (user) => {
     _id: userTemp.id,
     isActive: userTemp.isActive,
     createdAt: userTemp.createdAt,
+    modifiedAt: userTemp.modifiedAt,
   };
 };
 
@@ -33,7 +35,7 @@ UserRouter.get('/', (req, res) => {
   const page = (req.query.p) ? parseInt(req.query.p, 10) : 1;
   const count = (req.query.c) ? parseInt(req.query.c, 10) : 10;
   const query = (req.query.q) ? req.query.q : '{}';
-  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
+  const fields = (req.query.f) ? req.query.f : '_id'; /* retorna ID por padrão */
   const sort = (req.query.o) ? req.query.o : '{}';
 
   /* Converte entrada (field1,field2)->(field1 field2) */
@@ -77,7 +79,7 @@ UserRouter.get('/', (req, res) => {
  * Retorna um usuário com o ID
 */
 UserRouter.get('/:id', (req, res) => {
-  const fields = (req.query.f) ? req.query.f : '__id'; /* retorna ID por padrão */
+  const fields = (req.query.f) ? req.query.f : '_id'; /* retorna ID por padrão */
   const fieldsStr = userFieldsParse(fields);
   UserModel
     .findById(req.params.id, fieldsStr)
@@ -96,14 +98,35 @@ UserRouter.put('/:id', () => {
 /*
  * Remove um usuário
 */
+UserRouter.delete('/', (req, res) => {
+  res.status(400).json({
+    error: 'O campo id é obrigatório',
+    target: [{
+      field: '_id',
+      error: 'Não deve ser nulo',
+    }],
+  });
+});
+
 UserRouter.delete('/:id', (req, res) => {
+  let id;
+  try {
+    id = mongoose.Types.ObjectId(req.params.id);
+  } catch (e) {
+    res.status(400).json({
+      error: 'Error: O id inserido é inválido',
+    });
+    return;
+  }
+
   UserModel
-  .findById(req.params.id)
+  .findById(id)
   .then(usr =>
     new Promise((resolve, reject) => {
       if (!usr) reject();
       const usrTemp = usr;
       usrTemp.isActive = false;
+      usrTemp.modifiedAt = Date.now();
       resolve(usrTemp.save());
     }))
   .then((updatedUsr) => {
